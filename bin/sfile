@@ -80,6 +80,10 @@ switch (argv._[0]) {
     sfile.get(keyword, function (err, lib) {
       if (err) return sfile.error(err);
 
+      if (!lib) {
+        return printLn("未找到库:" + keyword);
+      }
+
       var version = argv.version || "" + lib.version;
       var matched = false;
 
