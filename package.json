@@ -1,0 +1,24 @@
+{
+  "name": "sfile",
+  "version": "0.0.1",
+  "description": "The static library search and cli for staticfile.org.",
+  "author": "hfcorriez <hfcorriez@gmail.com>",
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/bower/bower/blob/master/LICENSE"
+    }
+  ],
+  "homepage": "http://staticfile.org",
+  "engines": {
+    "node": "*"
+  },
+  "dependencies": {
+    "optimist": "0.6.0",
+    "colors": "0.6.2",
+    "request": "2.27.0"
+  },
+  "bin": {
+    "sfile": "bin/sfile"
+  }
+}

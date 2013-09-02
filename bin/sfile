@@ -1,0 +1,130 @@
+#!/usr/bin/env node
+var sfile = require('../lib')
+  , clip = require('cliparoo')
+  , opt = require('optimist')
+  , argv = opt
+    .describe('s', 'Output HTTPS link')
+    .describe('h', 'Output HTML')
+    .usage("[Usage]\n\nsfile [command]\n\nCommands:\n\n  s, search [library]\tTo search the library...\n  g, get [library]\tTo get the library assets links...")
+    .argv;
+
+switch (argv._[0]) {
+  case 'search':
+  case 's':
+    argv = opt
+      .usage("sfile " + argv._[0] + " [library]")
+      .alias('s', 'ssl')
+      .alias('h', 'html')
+      .alias('n', 'no-link')
+      .describe('s', 'Output HTTPS link')
+      .describe('h', 'Output HTML')
+      .describe('n', 'Do not show the link for latest version')
+      .argv;
+
+    var keyword = argv._[1];
+    if (!keyword || argv.help) {
+      opt.showHelp();
+      return;
+    }
+    keyword = keyword.trim();
+
+    sfile.search(keyword, function (err, data) {
+      if (err) return sfile.error(err);
+
+      if (!data.total) {
+        return printLn("没有结果");
+      }
+
+      printLn(("搜索" + keyword.bold + "共有" + (data.total + "").bold + "个库，当前列出" + (data.libs.length + "").bold + "个:"));
+      printLn("");
+
+      data.libs.forEach(function (lib, index) {
+        printLn(((index > 9 ? index : " " + index) + ")").grey + " " + lib.name.replace(keyword, keyword.bold) + " [" + lib.version.green + "]");
+
+        if (!argv.n) {
+          var url = sfile.url("/" + lib.name + "/" + lib.version + "/" + lib.filename, argv.ssl);
+
+          if (argv.html) {
+            url = sfile.html(url);
+          }
+
+          printLn(("    " + url).grey);
+        }
+
+        printLn("");
+      });
+    });
+    break;
+  case "get":
+  case "g":
+    argv = opt
+      .usage("sfile " + argv._[0] + " [library]")
+      .alias('h', 'html')
+      .alias('s', 'ssl')
+      .alias('c', 'copy')
+      .alias('v', 'version')
+      .describe('v', 'Use given version')
+      .describe('h', 'Output HTML')
+      .describe('s', 'Output HTTPS link')
+      .describe('c', 'Copy to your system clipboard')
+      .argv;
+
+    var keyword = argv._[1];
+    if (!keyword || argv.help) {
+      opt.showHelp();
+      return;
+    }
+    keyword = keyword.trim();
+    sfile.get(keyword, function (err, lib) {
+      if (err) return sfile.error(err);
+
+      var version = argv.version || "" + lib.version;
+      var matched = false;
+
+      lib.assets.forEach(function (asset) {
+        if (asset.version == version) {
+          matched = true;
+          printLn("找到" + lib.name.bold + " [" + (lib.version + "").green + "]:");
+          printLn("");
+          var urls = [];
+          asset.files.forEach(function (file) {
+            var path = "/" + lib.name + "/" + version + "/" + file;
+            var url = sfile.url(path, argv.ssl);
+            if (argv.html) {
+              url = sfile.html(url);
+            }
+
+            url && printLn(url) && urls.push(url);
+          });
+
+          if (argv.copy) {
+            clip(urls.join(argv.html ? "\n" : "\\\\n"), function (err) {
+              if (err) return sfile.error(err);
+
+              printLn("✔ 已复制到剪贴板".green);
+            });
+          }
+        }
+      });
+
+      if (!matched) {
+        printLn("未找到" + keyword + " [" + version.red + "]");
+      }
+      printLn("");
+    });
+    break
+  default:
+    if (argv.version) {
+      var json = require("../package.json");
+      printLn(json.version);
+    } else {
+      opt.showHelp();
+    }
+}
+
+function printLn() {
+  var args = Array.prototype.slice.call(arguments, 0);
+  args[0] = " " + args[0];
+  console.log.apply(this, args);
+  return true;
+}
