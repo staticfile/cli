@@ -1,6 +1,6 @@
 {
   "name": "sfile",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "The static library search and cli for staticfile.org.",
   "author": "hfcorriez <hfcorriez@gmail.com>",
   "licenses": [
