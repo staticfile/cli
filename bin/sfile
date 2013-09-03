@@ -132,7 +132,7 @@ switch (argv._[0]) {
 
         // 复制到剪贴板
         if (argv.copy) {
-          clip(urls.join(argv.html ? "\n" : "\\\\n"), function (err) {
+          clip(urls.join(argv.html || argv.jade ? "\n" : "\\\\n"), function (err) {
             if (err) return sfile.error(err);
 
             printLn("✔ 已复制到剪贴板".green);
