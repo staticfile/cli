@@ -143,7 +143,7 @@ switch (argv._[0]) {
     });
     break
   default:
-    if (argv.version) {
+    if (argv.version || argv.v) {
       var json = require("../package.json");
       printLn(json.version);
     } else {
