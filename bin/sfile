@@ -33,7 +33,7 @@ switch (argv._[0]) {
         return printLn("没有结果");
       }
 
-      printLn(("搜索" + keyword.bold + "共有" + (data.total + "").bold + "个库，当前列出" + (data.libs.length + "").bold + "个:"));
+      printLn(("搜索 " + keyword.bold + " 共有 " + (data.total + "").bold + " 个库，当前列出 " + (data.libs.length + "").bold + " 个:"));
       printLn("");
 
       data.libs.forEach(function (lib, index) {
@@ -86,7 +86,7 @@ switch (argv._[0]) {
       lib.assets.forEach(function (asset) {
         if (asset.version == version) {
           matched = true;
-          printLn("找到" + lib.name.bold + " [" + (lib.version + "").green + "]:");
+          printLn("找到 " + lib.name.bold + " [" + (lib.version + "").green + "]:");
           printLn("");
           var urls = [];
           asset.files.forEach(function (file) {
@@ -110,7 +110,7 @@ switch (argv._[0]) {
       });
 
       if (!matched) {
-        printLn("未找到" + keyword + " [" + version.red + "]");
+        printLn("未找到 " + keyword + " [" + version.red + "]");
       }
       printLn("");
     });
