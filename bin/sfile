@@ -3,10 +3,6 @@ var sfile = require('../lib')
   , clip = require('cliparoo')
   , opt = require('optimist')
   , argv = opt
-    .alias('v', 'version')
-    .describe('s', 'Output HTTPS link')
-    .describe('h', 'Output HTML')
-    .describe('v', 'Show version')
     .usage("[Usage]\n\nsfile [command]\n\nCommands:\n\n  s, search [library]\tTo search the library...\n  g, get [library]\tTo get the library assets links...")
     .argv;
 
