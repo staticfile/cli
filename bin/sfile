@@ -46,9 +46,9 @@ switch (argv._[0]) {
 
           if (argv.html) {
             url = sfile.html(url);
-          } else if(argv.jade) {
+          } else if (argv.jade) {
             url = sfile.jade(url);
-	  }
+          }
 
           printLn(("    " + url).grey);
         }
@@ -79,46 +79,65 @@ switch (argv._[0]) {
       return;
     }
     keyword = keyword.trim();
-    sfile.get(keyword, function (err, lib) {
+    sfile.get(keyword, function (err, lib, suggest) {
       if (err) return sfile.error(err);
 
       if (!lib) {
-        return printLn("未找到库:" + keyword);
+        printLn("未找到库: " + keyword);
+        // 搜索建议
+        if (suggest.length > 0) {
+          printLn("");
+          for (var i in suggest) {
+            suggest[i] = suggest[i].underline;
+          }
+          printLn("你是不是要找: ".cyan + suggest.slice(0,5).join(" "));
+        }
+        return;
       }
 
       var version = argv.version || "" + lib.version;
       var matched = false;
 
+      // 匹配package.json给出的版本
       lib.assets.forEach(function (asset) {
         if (asset.version == version) {
-          matched = true;
-          printLn("找到 " + lib.name.bold + " [" + (lib.version + "").green + "]:");
-          printLn("");
-          var urls = [];
-          asset.files.forEach(function (file) {
-            var path = "/" + lib.name + "/" + version + "/" + file;
-            var url = sfile.url(path, argv.ssl);
-            if (argv.html) {
-              url = sfile.html(url);
-            } else if(argv.jade) {
-              url = sfile.jade(url);
-	    }
-
-            url && printLn(url) && urls.push(url);
-          });
-
-          if (argv.copy) {
-            clip(urls.join(argv.html ? "\n" : "\\\\n"), function (err) {
-              if (err) return sfile.error(err);
-
-              printLn("✔ 已复制到剪贴板".green);
-            });
-          }
+          if (matched) return;
+          matched = asset;
         }
       });
 
+      // 未匹配容错
+      if (!matched && lib.assets[0]) {
+        matched = lib.assets[0];
+      }
+
       if (!matched) {
         printLn("未找到 " + keyword + " [" + version.red + "]");
+      } else {
+        printLn("找到 " + lib.name.bold + " [" + version.green + "]:");
+        printLn("");
+
+        var urls = [];
+        matched.files.forEach(function (file) {
+          var path = "/" + lib.name + "/" + version + "/" + file;
+          var url = sfile.url(path, argv.ssl);
+          if (argv.html) {
+            url = sfile.html(url);
+          } else if (argv.jade) {
+            url = sfile.jade(url);
+          }
+
+          url && printLn(url) && urls.push(url);
+        });
+
+        // 复制到剪贴板
+        if (argv.copy) {
+          clip(urls.join(argv.html ? "\n" : "\\\\n"), function (err) {
+            if (err) return sfile.error(err);
+
+            printLn("✔ 已复制到剪贴板".green);
+          });
+        }
       }
       printLn("");
     });
