@@ -90,7 +90,7 @@ switch (argv._[0]) {
           for (var i in suggest) {
             suggest[i] = suggest[i].underline;
           }
-          printLn("你是不是要找: ".cyan + suggest.slice(0,5).join(" "));
+          printLn("你是不是要找: ".cyan + suggest.slice(0, 5).join(" "));
         }
         return;
       }
