@@ -13,9 +13,11 @@ switch (argv._[0]) {
       .usage("sfile " + argv._[0] + " [library]")
       .alias('s', 'ssl')
       .alias('h', 'html')
+      .alias('j', 'jade')
       .alias('n', 'no-link')
       .describe('s', 'Output HTTPS link')
       .describe('h', 'Output HTML')
+      .describe('j', 'Output Jade Markup')
       .describe('n', 'Do not show the link for latest version')
       .argv;
 
@@ -44,7 +46,9 @@ switch (argv._[0]) {
 
           if (argv.html) {
             url = sfile.html(url);
-          }
+          } else if(argv.jade) {
+            url = sfile.jade(url);
+	  }
 
           printLn(("    " + url).grey);
         }
@@ -58,11 +62,13 @@ switch (argv._[0]) {
     argv = opt
       .usage("sfile " + argv._[0] + " [library]")
       .alias('h', 'html')
+      .alias('j', 'jade')
       .alias('s', 'ssl')
       .alias('c', 'copy')
       .alias('v', 'version')
       .describe('v', 'Use given version')
       .describe('h', 'Output HTML')
+      .describe('j', 'Output Jade Markup')
       .describe('s', 'Output HTTPS link')
       .describe('c', 'Copy to your system clipboard')
       .argv;
@@ -94,7 +100,9 @@ switch (argv._[0]) {
             var url = sfile.url(path, argv.ssl);
             if (argv.html) {
               url = sfile.html(url);
-            }
+            } else if(argv.jade) {
+              url = sfile.jade(url);
+	    }
 
             url && printLn(url) && urls.push(url);
           });
