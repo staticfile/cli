@@ -20,6 +20,7 @@ sfile search [library]
 Options:
   -s, --ssl      Output HTTPS link
   -h, --html     Output HTML
+  -j, --jade     Output Jade Markup
   -n, --no-link  Do not show the link for latest version
 ```
 
@@ -33,6 +34,7 @@ sfile get [library]
 Options:
   -s, --ssl      Output HTTPS link
   -h, --html     Output HTML
+  -j, --jade     Output Jade Markup
   -v, --version  Use given version
   -c, --copy     Copy to your system clipboard
 ```
