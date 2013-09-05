@@ -66,7 +66,7 @@ switch (argv._[0]) {
       .alias('s', 'ssl')
       .alias('c', 'copy')
       .alias('v', 'version')
-      .describe('v', 'Use given version')
+      .describe('v', 'Use given version, leave empty if you want to see all supported version ')
       .describe('h', 'Output HTML')
       .describe('j', 'Output Jade Markup')
       .describe('s', 'Output HTTPS link')
@@ -95,7 +95,7 @@ switch (argv._[0]) {
         return;
       }
 
-      var version = argv.version || "" + lib.version;
+      var version = (argv.version && argv.version !== true) ? argv.version : "" + lib.version;
       var matched = false;
 
       // 匹配package.json给出的版本
@@ -107,12 +107,12 @@ switch (argv._[0]) {
       });
 
       // 未匹配容错
-      if (!matched && lib.assets[0]) {
+      if (!matched && lib.assets[0] && !argv.version) {
         matched = lib.assets[0];
       }
 
       if (!matched) {
-        printLn("未找到 " + keyword + " [" + version.red + "]");
+        printLn("未找到 " + keyword + " [" + (argv.version + "").red + "]");
       } else {
         printLn("找到 " + lib.name.bold + " [" + version.green + "]:");
         printLn("");
@@ -140,6 +140,8 @@ switch (argv._[0]) {
         }
       }
       printLn("");
+      if (argv.version)
+        printLn("支持的版本号: ".cyan + lib.assets.map(function(asset){return asset.version.underline}).join(" "));
     });
     break
   default:
