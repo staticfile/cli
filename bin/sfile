@@ -140,10 +140,8 @@ switch (argv._[0]) {
         }
       }
       printLn("");
-      if (argv.version){
-        printLn("支持的版本号: ".cyan + lib.assets.map(function(asset){return asset.version}).join(" "));
-        printLn("");
-      }
+      if (argv.version)
+        printLn("支持的版本号: ".cyan + lib.assets.map(function(asset){return asset.version.underline}).join(" "));
     });
     break
   default:
