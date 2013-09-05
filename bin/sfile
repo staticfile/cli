@@ -107,12 +107,12 @@ switch (argv._[0]) {
       });
 
       // 未匹配容错
-      if (!matched && lib.assets[0]) {
+      if (!matched && lib.assets[0] && !argv.version) {
         matched = lib.assets[0];
       }
 
       if (!matched) {
-        printLn("未找到 " + keyword + " [" + version.red + "]");
+        printLn("未找到 " + keyword + " [" + (argv.version + "").red + "]");
       } else {
         printLn("找到 " + lib.name.bold + " [" + version.green + "]:");
         printLn("");
