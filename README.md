@@ -35,7 +35,7 @@ Options:
   -s, --ssl      Output HTTPS link
   -h, --html     Output HTML
   -j, --jade     Output Jade Markup
-  -v, --version  Use given version
+  -v, --version  Use given version, leave empty if you want to see all supported version
   -c, --copy     Copy to your system clipboard
 ```
 
