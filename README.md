@@ -10,6 +10,16 @@ npm install -g sfile
 
 # 使用
 
+## 快捷搜索
+
+快速搜索关键字
+
+```
+sfile [library]
+```
+
+![快速搜索](./docs/quicksearch.png)
+
 ## 搜索
 
 搜索关键字
