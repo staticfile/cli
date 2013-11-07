@@ -141,13 +141,84 @@ switch (argv._[0]) {
       }
       printLn("");
       if (argv.version)
-        printLn("支持的版本号: ".cyan + lib.assets.map(function(asset){return asset.version.underline}).join(" "));
+        printLn("支持的版本号: ".cyan + lib.assets.map(function (asset) {
+          return asset.version.underline
+        }).join(" "));
     });
     break
   default:
     if (argv.version || argv.v) {
       var json = require("../package.json");
       printLn(json.version);
+    } else if (argv._[0]) {
+      var List = require('term-list')
+        , list = new List({ marker: '\033[36m› \033[0m', markerLength: 2 })
+        , styles = ['', 'html', 'jade']
+        , current_style_index = 0
+
+      keyword = argv._[0].trim();
+
+      sfile.search(keyword, function (err, data) {
+        if (err) return sfile.error(err);
+
+        if (!data.total) {
+          return printLn("没有结果");
+        }
+
+        printLn(("搜索 " + keyword.bold + " 共有 " + (data.total + "").bold + " 个库，当前列出 " + (data.libs.length + "").bold + " 个:"));
+
+        data.libs.forEach(function (lib, index) {
+          var url = sfile.url("/" + lib.name + "/" + lib.version + "/" + lib.filename);
+          lib.index = index;
+          lib.base = lib.name.replace(keyword, keyword.bold) + " [" + lib.version.green + "] ";
+          lib.url = url;
+          lib.to_copy = url;
+          lib.subLabel = lib.filename;
+          lib.current = 'url';
+          list.add(lib, lib.base + lib.subLabel.grey);
+        });
+
+        var changeStyle = function (reverse) {
+          if (reverse) {
+            current_style_index = current_style_index - 1 < 0 ? 2 : current_style_index - 1;
+          } else {
+            current_style_index = current_style_index + 1 > 2 ? 0 : current_style_index + 1;
+          }
+          var current_style = styles[current_style_index];
+
+          list.items.forEach(function (it, i) {
+            var current = list.at(i);
+            current.label = it.id.base + it.id.subLabel.grey + (current_style && (' [' + current_style + ']').red);
+            current.id.to_copy = current_style ? sfile[current_style](it.id.url) : it.id.url;
+          });
+          list.draw();
+        }
+
+        list.start();
+
+        list.on("keypress", function (key, item) {
+          switch (key.name) {
+            case "return":
+              clip(item.to_copy, function (err) {
+                if (err) return sfile.error(err);
+
+                printLn("✔ 已复制到剪贴板".green);
+              });
+              list.stop();
+              break;
+            case "left":
+              changeStyle(true);
+              break;
+            case "right":
+              changeStyle(false);
+              break;
+          }
+        });
+
+        list.on('empty', function () {
+          list.stop();
+        });
+      });
     } else {
       opt.showHelp();
     }
