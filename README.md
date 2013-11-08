@@ -18,7 +18,7 @@ npm install -g sfile
 sfile [library]
 ```
 
-![快速搜索](https://github.com/staticfile/cli/blob/master/docs/quicksearch.png)
+![快速搜索](https://github.com/staticfile/cli/raw/master/docs/quicksearch.png)
 
 ## 搜索
 
