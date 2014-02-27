@@ -7,6 +7,28 @@ var sfile = require('../lib')
     .argv;
 
 switch (argv._[0]) {
+  case 'i':
+  case 'info':
+    var prettyjson = require('prettyjson')
+    var keyword = argv._[1];
+    if (!keyword || argv.help) {
+      opt.showHelp();
+      return;
+    }
+    keyword = keyword.trim();
+
+    sfile.info(keyword, function (err, data) {
+      if (err) {
+        return sfile.error(err);
+      }
+
+      if (data.assets) {
+        data.assets = [data.assets[0]]
+      }
+
+      console.log(prettyjson.render(data));
+    })
+    break;
   case 'search':
   case 's':
     argv = opt
