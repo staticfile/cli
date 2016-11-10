@@ -88,7 +88,7 @@ switch (argv._[0]) {
       printLn("库名：".green+libs.name);
       printLn("当前版本：".green+version);
       libs.assets[0].files.forEach(function (filename, index) {
-            printLn(sfile.url('/'+libs.name+'/'+version+'/'+filename,argv.ssl).white);
+            printLn(sfile.url('/'+libs.name+'/'+version+'/'+filename).white);
           }
       )
         // 复制到剪贴板
