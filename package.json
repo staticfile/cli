@@ -1,8 +1,11 @@
 {
   "name": "sfile",
-  "version": "0.1.2",
+  "version": "1.0.0",
   "description": "The static library search and cli for staticfile.org.",
   "author": "hfcorriez <hfcorriez@gmail.com>",
+  "contributors": [
+    "Xuanwo <xuanwo.cn@gmail.com> (https://xuanwo.org/)"
+  ],
   "licenses": [
     {
       "type": "MIT",
