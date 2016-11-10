@@ -33,14 +33,6 @@ switch (argv._[0]) {
   case 's':
     argv = opt
       .usage("sfile " + argv._[0] + " [library]")
-      .alias('s', 'ssl')
-      .alias('h', 'html')
-      .alias('j', 'jade')
-      .alias('n', 'no-link')
-      .describe('s', 'Output HTTPS link')
-      .describe('h', 'Output HTML')
-      .describe('j', 'Output Jade Markup')
-      .describe('n', 'Do not show the link for latest version')
       .argv;
 
     var keyword = argv._[1];
