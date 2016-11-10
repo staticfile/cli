@@ -9,7 +9,7 @@ var sfile = require('../lib')
 switch (argv._[0]) {
   case 'i':
   case 'info':
-    var prettyjson = require('prettyjson')
+    var prettyjson = require('prettyjson');
     var keyword = argv._[1];
     if (!keyword || argv.help) {
       opt.showHelp();
@@ -27,7 +27,7 @@ switch (argv._[0]) {
       }
 
       console.log(prettyjson.render(data));
-    })
+    });
     break;
   case 'search':
   case 's':
@@ -62,18 +62,6 @@ switch (argv._[0]) {
 
       data.libs.forEach(function (lib, index) {
         printLn(((index > 9 ? index : " " + index) + ")").grey + " " + lib.name.replace(keyword, keyword.bold) + " [" + lib.version.green + "]");
-
-        if (!argv.n) {
-          var url = sfile.url("/" + lib.name + "/" + lib.version + "/" + lib.filename, argv.ssl);
-
-          if (argv.html) {
-            url = sfile.html(url);
-          } else if (argv.jade) {
-            url = sfile.jade(url);
-          }
-
-          printLn(("    " + url).grey);
-        }
 
         printLn("");
       });
@@ -167,7 +155,7 @@ switch (argv._[0]) {
           return asset.version.underline
         }).join(" "));
     });
-    break
+    break;
   default:
     if (argv.version || argv.v) {
       var json = require("../package.json");
@@ -176,7 +164,7 @@ switch (argv._[0]) {
       var List = require('term-list')
         , list = new List({ marker: '\033[36m› \033[0m', markerLength: 2 })
         , styles = ['', 'html', 'jade']
-        , current_style_index = 0
+        , current_style_index = 0;
 
       keyword = argv._[0].trim();
 
@@ -214,7 +202,7 @@ switch (argv._[0]) {
             current.id.to_copy = current_style ? sfile[current_style](it.id.url) : it.id.url;
           });
           list.draw();
-        }
+        };
 
         list.start();
 
