@@ -2,6 +2,8 @@
 
 [staticfile.org](http://staticfile.org)命令行工具
 
+![](https://api.travis-ci.org/staticfile/cli.svg)
+
 # 安装
 
 ```
