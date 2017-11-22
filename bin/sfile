@@ -1,114 +1,134 @@
 #!/usr/bin/env node
-var sfile = require('../lib')
-  , clip = require('cliparoo')
-  , opt = require('optimist')
-  , argv = opt
-    .usage("[Usage]\n\nsfile [command]\n\nCommands:\n\n  s, search [library]\tTo search the library...\n  g, get [library]\tTo get the library assets links...")
-    .argv;
+var sfile = require('../lib'),
+    clip = require('cliparoo'),
+    opt = require('optimist'),
+    argv = opt.usage(
+        '[Usage]\n\nsfile [command]\n\nCommands:\n\n  s, search [library]\tTo search the library...\n  g, get [library]\tTo get the library assets links...'
+    ).argv,
+    keyword;
 
 switch (argv._[0]) {
-  case 'i':
-  case 'info':
-    var prettyjson = require('prettyjson');
-    var keyword = argv._[1];
-    if (!keyword || argv.help) {
-      opt.showHelp();
-      return;
-    }
-    keyword = keyword.trim();
+    case 'i':
+    case 'info':
+        var prettyjson = require('prettyjson');
+        keyword = argv._[1];
+        if (!keyword || argv.help) {
+            opt.showHelp();
+            return;
+        }
+        keyword = keyword.trim();
 
-    sfile.info(keyword, function (err, data) {
-      if (err) {
-        return sfile.error(err);
-      }
+        sfile.info(keyword, function(err, data) {
+            if (err) {
+                return sfile.error(err);
+            }
 
-      if (data.assets) {
-        data.assets = [data.assets[0]]
-      }
+            if (data.assets) {
+                data.assets = [data.assets[0]];
+            }
 
-      console.log(prettyjson.render(data));
-    });
-    break;
-  case 'search':
-  case 's':
-    argv = opt
-      .usage("sfile " + argv._[0] + " [library]")
-      .argv;
+            console.log(prettyjson.render(data));
+        });
+        break;
+    case 'search':
+    case 's':
+        argv = opt.usage('sfile ' + argv._[0] + ' [library]').argv;
 
-    var keyword = argv._[1];
-    if (!keyword || argv.help) {
-      opt.showHelp();
-      return;
-    }
-    keyword = keyword.trim();
+        keyword = argv._[1];
+        if (!keyword || argv.help) {
+            opt.showHelp();
+            return;
+        }
+        keyword = keyword.trim();
 
-    sfile.search(keyword, function (err, data) {
-      if (err) return sfile.error(err);
-
-      if (!data.total) {
-        return printLn("没有结果");
-      }
-
-      printLn(("搜索 " + keyword.bold + " 共有 " + (data.total + "").bold + " 个库，当前列出 " + (data.libs.length + "").bold + " 个:"));
-      printLn("");
-
-      data.libs.forEach(function (lib, index) {
-        printLn(((index > 9 ? index : " " + index) + ")").grey + " " + lib.name.replace(keyword, keyword.bold) + " [" + lib.version.green + "]");
-
-        printLn("");
-      });
-    });
-    break;
-  case "get":
-  case "g":
-    argv = opt
-      .usage("sfile " + argv._[0] + " [library]")
-      .alias('h', 'html')
-      .alias('j', 'jade')
-      .alias('s', 'ssl')
-      .alias('c', 'copy')
-      .alias('v', 'version')
-      .describe('v', 'Use given version, leave empty if you want to see all supported version ')
-      .describe('h', 'Output HTML')
-      .describe('j', 'Output Jade Markup')
-      .describe('s', 'Output HTTPS link')
-      .describe('c', 'Copy to your system clipboard')
-      .argv;
-
-    var keyword = argv._[1];
-    if (!keyword || argv.help) {
-      opt.showHelp();
-      return;
-    }
-    keyword = keyword.trim();
-    sfile.info(keyword, function (err, libs) {
-      if (err) return sfile.error(err);
-
-      var version = (argv.version && argv.version !== true) ? argv.version : "" + libs.version;
-      printLn("库名：".green+libs.name);
-      printLn("当前版本：".green+version);
-      libs.assets[0].files.forEach(function (filename, index) {
-            printLn(sfile.url('/'+libs.name+'/'+version+'/'+filename).white);
-          }
-      )
-        // 复制到剪贴板
-        if (argv.copy) {
-          clip(urls.join(argv.html || argv.jade ? "\n" : "\\\\n"), function (err) {
+        sfile.search(keyword, function(err, data) {
             if (err) return sfile.error(err);
 
-            printLn("✔ 已复制到剪贴板".green);
-          });
-        };
-      printLn("");
-    });
-    break;
-  default:
-      opt.showHelp();
+            if (!data.total) {
+                return printLn('没有结果');
+            }
+
+            printLn(
+                '搜索 ' +
+                    keyword.bold +
+                    ' 共有 ' +
+                    (data.total + '').bold +
+                    ' 个库，当前列出 ' +
+                    (data.libs.length + '').bold +
+                    ' 个:'
+            );
+            printLn('');
+
+            data.libs.forEach(function(lib, index) {
+                printLn(
+                    ((index > 9 ? index : ' ' + index) + ')').grey +
+                        ' ' +
+                        lib.name.replace(keyword, keyword.bold) +
+                        ' [' +
+                        lib.version.green +
+                        ']'
+                );
+
+                printLn('');
+            });
+        });
+        break;
+    case 'get':
+    case 'g':
+        argv = opt
+            .usage('sfile ' + argv._[0] + ' [library]')
+            .alias('h', 'html')
+            .alias('j', 'jade')
+            .alias('s', 'ssl')
+            .alias('c', 'copy')
+            .alias('v', 'version')
+            .describe(
+                'v',
+                'Use given version, leave empty if you want to see all supported version '
+            )
+            .describe('h', 'Output HTML')
+            .describe('j', 'Output Jade Markup')
+            .describe('s', 'Output HTTPS link')
+            .describe('c', 'Copy to your system clipboard').argv;
+
+        keyword = argv._[1];
+        if (!keyword || argv.help) {
+            opt.showHelp();
+            return;
+        }
+        keyword = keyword.trim();
+        sfile.info(keyword, function(err, libs) {
+            if (err) return sfile.error(err);
+
+            var version = argv.version && argv.version !== true ? argv.version : '' + libs.version;
+            var urls = [];
+            printLn('库名：'.green + libs.name);
+            printLn('当前版本：'.green + version);
+            libs.assets
+                .filter(asset => asset.version === version)[0]
+                .files.forEach(function(filename) {
+                    var url = sfile.url('/' + libs.name + '/' + version + '/' + filename);
+                    urls.push(url);
+                    printLn(url.white);
+                });
+            // 复制到剪贴板
+            if (argv.copy) {
+                clip(urls.join(argv.html || argv.jade ? '\n' : '\\\\n'), function(err) {
+                    if (err) return sfile.error(err);
+
+                    printLn('✔ 已复制到剪贴板'.green);
+                });
+            }
+            printLn('');
+        });
+        break;
+    default:
+        opt.showHelp();
 }
 
 function printLn() {
-  var args = Array.prototype.slice.call(arguments, 0);
-  args[0] = " " + args[0];
-  console.log.apply(this, args);
-  return true;
+    var args = Array.prototype.slice.call(arguments, 0);
+    args[0] = ' ' + args[0];
+    console.log.apply(this, args);
+    return true;
 }
