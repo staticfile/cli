@@ -1,8 +1,11 @@
 {
   "name": "sfile",
-  "version": "0.1.2",
+  "version": "1.0.0",
   "description": "The static library search and cli for staticfile.org.",
   "author": "hfcorriez <hfcorriez@gmail.com>",
+  "contributors": [
+    "Xuanwo <xuanwo.cn@gmail.com> (https://xuanwo.org/)"
+  ],
   "licenses": [
     {
       "type": "MIT",
@@ -12,6 +15,9 @@
   "homepage": "http://staticfile.org",
   "engines": {
     "node": "*"
+  },
+  "scripts": {
+    "test": "mocha --recursive"
   },
   "dependencies": {
     "optimist": "0.6.0",
@@ -23,5 +29,9 @@
   },
   "bin": {
     "sfile": "bin/sfile"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^3.1.2"
   }
 }
